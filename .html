@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   ```html
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arashan.kg</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #dfe9f3, #ffffff);
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* FORM */
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+input {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    width: 180px;
+}
+
+input[type="file"] {
+    padding: 5px;
+}
+
+button {
+    padding: 12px 18px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* SEARCH */
+.search {
+    margin: 20px auto;
+    display: block;
+    width: 60%;
+}
+
+/* CARDS */
+#ads {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: green;
+    font-weight: bold;
+}
+
+/* DELETE */
+.delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+}
+
+/* EMPTY */
+.empty {
+    text-align: center;
+    color: gray;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Arashan.kg</h1>
+    <p>Мал сатуу сайты</p>
+</header>
+
+<div class="container">
+
+    <div class="form">
+        <input type="text" id="title" placeholder="Аталышы">
+        <input type="number" id="price" placeholder="Баасы">
+        <input type="file" id="image">
+        <button onclick="addAd()">Кошуу</button>
+    </div>
+
+    <input type="text" id="search" class="search" placeholder="Издөө..." onkeyup="searchAds()">
+
+    <div id="ads"></div>
+    <p id="emptyText" class="empty">Азырынча жарнама жок</p>
+
+</div>
+
+<script>
+let ads = JSON.parse(localStorage.getItem("ads")) || [];
+
+function saveAds() {
+    localStorage.setItem("ads", JSON.stringify(ads));
+}
+
+function renderAds(list = ads) {
+    let container = document.getElementById("ads");
+    let emptyText = document.getElementById("emptyText");
+
+    container.innerHTML = "";
+
+    if(list.length === 0) {
+        emptyText.style.display = "block";
+        return;
+    }
+
+    emptyText.style.display = "none";
+
+    list.forEach((ad, index) => {
+        let div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+            <button class="delete" onclick="removeAd(${index})">×</button>
+            ${ad.image ? `<img src="${ad.image}">` : ""}
+            <h3>${ad.title}</h3>
+            <p>${ad.price} сом</p>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function addAd() {
+    let title = document.getElementById("title").value;
+    let price = document.getElementById("price").value;
+    let file = document.getElementById("image").files[0];
+
+    if(title === "" || price === "") {
+        alert("Толтур!");
+        return;
+    }
+
+    if(file) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            ads.push({
+                title,
+                price,
+                image: e.target.result
+            });
+            saveAds();
+            renderAds();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        ads.push({title, price});
+        saveAds();
+        renderAds();
+    }
+
+    document.getElementById("title").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("image").value = "";
+}
+
+function removeAd(index) {
+    ads.splice(index, 1);
+    saveAds();
+    renderAds();
+}
+
+function searchAds() {
+    let text = document.getElementById("search").value.toLowerCase();
+
+    let filtered = ads.filter(ad =>
+        ad.title.toLowerCase().includes(text)
+    );
+
+    renderAds(filtered);
+}
+
+renderAds();
+</script>
+
+</body>
+</html>
+```
+ 
+</body>
+</html>
